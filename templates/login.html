@@ -1,0 +1,94 @@
+{% extends "base.html" %} {% block title %}Login - Mining Application{% endblock
+%} {% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6 col-lg-4">
+    <div class="card shadow-lg">
+      <div class="card-header bg-primary text-white text-center">
+        <h3><i class="fas fa-gem"></i> Mining Application</h3>
+        <p class="mb-0">Critical Minerals Data Platform</p>
+      </div>
+      <div class="card-body">
+        <h4 class="text-center mb-4">Login</h4>
+
+        <form method="POST" action="{{ url_for('login') }}">
+          <div class="mb-3">
+            <label for="username" class="form-label">
+              <i class="fas fa-user"></i> Username
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              placeholder="Enter your username"
+              required
+              autofocus
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">
+              <i class="fas fa-lock"></i> Password
+            </label>
+            <div class="input-group">
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                id="togglePassword"
+              >
+                <i class="fas fa-eye" id="toggleIcon"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+          </div>
+        </form>
+
+        <hr class="my-4" />
+
+        <div class="alert alert-info small">
+          <strong><i class="fas fa-info-circle"></i> Demo Credentials:</strong
+          ><br />
+          Check your users.csv file for available usernames
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Password toggle functionality
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+    
+    togglePassword.addEventListener('click', function() {
+        // Toggle the type attribute
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        
+        // Toggle the icon
+        if (type === 'password') {
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        } else {
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

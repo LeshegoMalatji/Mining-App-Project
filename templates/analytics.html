@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - Mining Application{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-chart-bar"></i> Analytics Dashboard</h2>
+        <p class="text-muted">Interactive charts and data visualizations</p>
+    </div>
+</div>
+
+<!-- Mineral Price Comparison -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-coins"></i> Mineral Market Prices</h5>
+            </div>
+            <div class="card-body">
+                {{ mineral_price_chart|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Country GDP Comparison -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-flag"></i> Country Economic Overview</h5>
+            </div>
+            <div class="card-body">
+                {{ country_gdp_chart|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Production Trends -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-line"></i> Production Trends</h5>
+            </div>
+            <div class="card-body">
+                {{ production_trend_chart|safe }}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-dollar-sign"></i> Export Values</h5>
+            </div>
+            <div class="card-body">
+                {{ export_value_chart|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Back Button -->
+<div class="row mt-4">
+    <div class="col-12">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

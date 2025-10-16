@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Countries - Mining Application{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-globe"></i> Country Profiles</h2>
+        <p class="text-muted">African countries with critical mineral resources</p>
+    </div>
+</div>
+
+<!-- Countries Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-flag"></i> All Countries</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Country Name</th>
+                                <th>GDP (Billion USD)</th>
+                                <th>Mining Revenue (Billion USD)</th>
+                                <th>Mining % of GDP</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for country in countries %}
+                            <tr>
+                                <td>{{ country.get_id() }}</td>
+                                <td><strong>{{ country.get_name() }}</strong></td>
+                                <td class="text-primary">${{ "{:,.2f}".format(country.get_gdp()) }}B</td>
+                                <td class="text-success">${{ "{:,.2f}".format(country.get_mining_revenue()) }}B</td>
+                                <td>
+                                    <span class="badge bg-info">
+                                        {{ "%.2f"|format(country.get_mining_contribution_percentage()) }}%
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('country_detail', country_id=country.get_id()) }}" 
+                                       class="btn btn-sm btn-success">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">
+                                    <i class="fas fa-exclamation-circle"></i> No countries found
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle"></i> Total Countries: {{ countries|length }}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Back Button -->
+<div class="row mt-4">
+    <div class="col-12">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

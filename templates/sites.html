@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Mining Sites - Mining Application{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-map-marker-alt"></i> Mining Sites</h2>
+        <p class="text-muted">All mining sites with geographical locations</p>
+    </div>
+</div>
+
+<!-- Interactive Map -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-map"></i> Sites Map</h5>
+            </div>
+            <div class="card-body p-0">
+                <div style="height: 500px;">
+                    {{ sites_map|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sites Table -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="fas fa-table"></i> All Mining Sites</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>Site ID</th>
+                                <th>Site Name</th>
+                                <th>Country</th>
+                                <th>Mineral</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th>Production (tonnes)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in sites_data %}
+                            <tr>
+                                <td>{{ item.site.get_id() }}</td>
+                                <td><strong>{{ item.site.get_name() }}</strong></td>
+                                <td>
+                                    <a href="{{ url_for('country_detail', country_id=item.site.get_country_id()) }}" 
+                                       class="text-decoration-none">
+                                        {{ item.country_name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('mineral_detail', mineral_id=item.site.get_mineral_id()) }}" 
+                                       class="text-decoration-none">
+                                        {{ item.mineral_name }}
+                                    </a>
+                                </td>
+                                <td>{{ "%.4f"|format(item.site.get_latitude()) }}</td>
+                                <td>{{ "%.4f"|format(item.site.get_longitude()) }}</td>
+                                <td class="text-success fw-bold">{{ "{:,}".format(item.site.get_production()) }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">
+                                    <i class="fas fa-exclamation-circle"></i> No mining sites found
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle"></i> Total Mining Sites: {{ sites_data|length }}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Back Button -->
+<div class="row mt-4">
+    <div class="col-12">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

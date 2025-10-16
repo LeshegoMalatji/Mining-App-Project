@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}{{ country.get_name() }} - Mining Application{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-flag"></i> {{ country.get_name() }}</h2>
+        <p class="text-muted">Country profile and mining statistics</p>
+    </div>
+</div>
+
+<!-- Country Information -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> Country Information</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="250">Country ID:</th>
+                        <td>{{ country.get_id() }}</td>
+                    </tr>
+                    <tr>
+                        <th>Country Name:</th>
+                        <td><strong class="fs-5">{{ country.get_name() }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>GDP:</th>
+                        <td class="text-primary fw-bold fs-5">
+                            ${{ "{:,.2f}".format(country.get_gdp()) }} Billion USD
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Mining Revenue:</th>
+                        <td class="text-success fw-bold fs-5">
+                            ${{ "{:,.2f}".format(country.get_mining_revenue()) }} Billion USD
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Mining Contribution to GDP:</th>
+                        <td>
+                            <span class="badge bg-info fs-6">
+                                {{ "%.2f"|format(country.get_mining_contribution_percentage()) }}%
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Economic Statistics -->
+    <div class="col-md-4">
+        <div class="card shadow bg-primary text-white h-100">
+            <div class="card-header bg-transparent border-bottom border-white">
+                <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Quick Stats</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h6 class="text-white-50">Mining Sites</h6>
+                    <h2>{{ sites|length }}</h2>
+                </div>
+                <div class="mb-4">
+                    <h6 class="text-white-50">Production Records</h6>
+                    <h2>{{ production_stats|length }}</h2>
+                </div>
+                <div>
+                    <h6 class="text-white-50">Mining % of GDP</h6>
+                    <h2>{{ "%.1f"|format(country.get_mining_contribution_percentage()) }}%</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Projects -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-project-diagram"></i> Key Projects</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-0">{{ country.get_key_projects() }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Production Charts -->
+{% if production_trend_chart %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-line"></i> Production Trend</h5>
+            </div>
+            <div class="card-body">
+                {{ production_trend_chart|safe }}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="fas fa-dollar-sign"></i> Export Value Trend</h5>
+            </div>
+            <div class="card-body">
+                {{ export_value_chart|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Country Sites Map -->
+{% if country_map %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-map"></i> Mining Sites Map</h5>
+            </div>
+            <div class="card-body p-0">
+                <div style="height: 400px;">
+                    {{ country_map|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Mining Sites -->
+{% if sites %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-map-marker-alt"></i> Mining Sites</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Site Name</th>
+                                <th>Mineral ID</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th>Production (tonnes)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for site in sites %}
+                            <tr>
+                                <td><strong>{{ site.get_name() }}</strong></td>
+                                <td>{{ site.get_mineral_id() }}</td>
+                                <td>{{ "%.4f"|format(site.get_latitude()) }}</td>
+                                <td>{{ "%.4f"|format(site.get_longitude()) }}</td>
+                                <td class="text-success">{{ "{:,}".format(site.get_production()) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Production Statistics -->
+{% if production_stats %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-line"></i> Production Statistics by Year</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Mineral ID</th>
+                                <th>Production (tonnes)</th>
+                                <th>Export Value (Billion USD)</th>
+                                <th>Avg Price per Tonne</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in production_stats %}
+                            <tr>
+                                <td><strong>{{ stat.get_year() }}</strong></td>
+                                <td>{{ stat.get_mineral_id() }}</td>
+                                <td class="text-primary">{{ "{:,}".format(stat.get_production()) }}</td>
+                                <td class="text-success">${{ "%.2f"|format(stat.get_export_value()) }}B</td>
+                                <td class="text-info">${{ "{:,.2f}".format(stat.get_average_price_per_tonne()) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Back Button -->
+<div class="row mt-4">
+    <div class="col-12">
+        <a href="{{ url_for('countries') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Countries
+        </a>
+    </div>
+</div>
+{% endblock %}

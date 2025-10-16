@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}{{ mineral.get_name() }} - Mining Application{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2><i class="fas fa-gem"></i> {{ mineral.get_name() }}</h2>
+        <p class="text-muted">Detailed information about {{ mineral.get_name() }}</p>
+    </div>
+</div>
+
+<!-- Mineral Information Card -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> Mineral Information</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="200">Mineral ID:</th>
+                        <td>{{ mineral.get_id() }}</td>
+                    </tr>
+                    <tr>
+                        <th>Name:</th>
+                        <td><strong>{{ mineral.get_name() }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Description:</th>
+                        <td>{{ mineral.get_description() }}</td>
+                    </tr>
+                    <tr>
+                        <th>Market Price:</th>
+                        <td class="text-success fw-bold fs-5">
+                            ${{ "{:,.2f}".format(mineral.get_market_price()) }} per tonne
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Statistics -->
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Quick Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6 class="text-muted">Production Sites</h6>
+                    <h3 class="text-primary">{{ sites|length }}</h3>
+                </div>
+                <div class="mb-3">
+                    <h6 class="text-muted">Production Records</h6>
+                    <h3 class="text-success">{{ production_stats|length }}</h3>
+                </div>
+                {% if production_stats %}
+                <div class="mb-3">
+                    <h6 class="text-muted">Total Production</h6>
+                    <h3 class="text-info">
+                        {% set total_production = production_stats|sum(attribute='production_tonnes') %}
+                        {{ "{:,}".format(total_production) }} tonnes
+                    </h3>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Production Charts -->
+{% if production_trend_chart %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-line"></i> Production Trend</h5>
+            </div>
+            <div class="card-body">
+                {{ production_trend_chart|safe }}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-dollar-sign"></i> Export Value Trend</h5>
+            </div>
+            <div class="card-body">
+                {{ export_value_chart|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Production by Country Pie Chart -->
+{% if production_pie_chart %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Production Distribution by Country</h5>
+            </div>
+            <div class="card-body">
+                {{ production_pie_chart|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Production Sites Table -->
+{% if sites %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-map-marker-alt"></i> Production Sites</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Site Name</th>
+                                <th>Country ID</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                                <th>Production (tonnes)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for site in sites %}
+                            <tr>
+                                <td><strong>{{ site.get_name() }}</strong></td>
+                                <td>{{ site.get_country_id() }}</td>
+                                <td>{{ "%.4f"|format(site.get_latitude()) }}</td>
+                                <td>{{ "%.4f"|format(site.get_longitude()) }}</td>
+                                <td class="text-success">{{ "{:,}".format(site.get_production()) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Production Statistics Table -->
+{% if production_stats %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-chart-line"></i> Production Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Country ID</th>
+                                <th>Production (tonnes)</th>
+                                <th>Export Value (Billion USD)</th>
+                                <th>Avg Price per Tonne</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in production_stats %}
+                            <tr>
+                                <td><strong>{{ stat.get_year() }}</strong></td>
+                                <td>{{ stat.get_country_id() }}</td>
+                                <td class="text-primary">{{ "{:,}".format(stat.get_production()) }}</td>
+                                <td class="text-success">${{ "%.2f"|format(stat.get_export_value()) }}B</td>
+                                <td class="text-info">${{ "{:,.2f}".format(stat.get_average_price_per_tonne()) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Back Button -->
+<div class="row mt-4">
+    <div class="col-12">
+        <a href="{{ url_for('minerals') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Minerals
+        </a>
+    </div>
+</div>
+{% endblock %}

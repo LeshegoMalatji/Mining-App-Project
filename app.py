@@ -46,7 +46,7 @@ from controllers.visualization_controller import VisualizationController
 from functools import wraps
 
 
-# ==================== Authentication Routes ====================
+ # ==================== Authentication Routes ==================== 
 
 @app.route('/')
 def index():

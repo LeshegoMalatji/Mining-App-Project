@@ -39,31 +39,11 @@ def login_required(f):
     return decorated_function
 
 
-def permission_required(permission):
-    """
-    Decorator to require specific permission for certain routes.
-    
-    Args:
-        permission (str): The required permission
-        
-    Returns:
-        The decorator function
-    """
-    def decorator(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            if 'role_id' not in session:
-                flash('Please log in to access this page.', 'warning')
-                return redirect(url_for('login'))
-            
-            # Check if user has the required permission
-            if not auth_controller.check_permission(session['role_id'], permission):
-                flash('You do not have permission to access this page.', 'danger')
-                return redirect(url_for('dashboard'))
-            
-            return f(*args, **kwargs)
-        return decorated_function
-    return decorator
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from controllers.auth_controller import AuthController
+from controllers.data_controller import DataController
+from controllers.visualization_controller import VisualizationController
+from functools import wraps
 
 
 # ==================== Authentication Routes ====================
@@ -167,7 +147,7 @@ def mineral_detail(mineral_id):
     """
     mineral = data_controller.get_mineral_by_id(mineral_id)
     
-    if mineral is None:
+    if Mineral is None:
         flash('Mineral not found.', 'danger')
         return redirect(url_for('minerals'))
     

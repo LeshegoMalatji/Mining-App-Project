@@ -1,5 +1,5 @@
 """
-Main Flask Application
+Flask Main Application
 Mining Application for Critical Minerals Data Visualization
 """
 
